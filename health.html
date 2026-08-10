@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Okoh Onyedikachi David">
+<title>Domain Health — Domain Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="topbar">
+  <a href="index.html" class="brand"><span class="brand-mark">D</span> Domain Toolkit</a>
+  <nav class="topnav">
+    <a href="index.html">Home</a>
+    <a href="analysis.html">Features</a>
+    <a href="docs.html">Pricing</a>
+    <a href="docs.html">Docs</a>
+    <a href="docs.html">About</a>
+  </nav>
+  <div class="topbar-actions">
+    <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <button class="icon-btn" data-theme-icon aria-label="Toggle theme"></button>
+    <div class="avatar">DT</div>
+  </div>
+</header>
+
+<div class="sidebar-backdrop"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <span class="sidebar-label">Workspace</span>
+    <a href="analysis.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</a>
+    <a href="dns-records.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v16"/></svg>DNS Records</a>
+    <a href="domain-details.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Domain Details</a>
+    <a href="health.html" class="active"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>Health Check</a>
+    <a href="propagation.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20"/></svg>Propagation</a>
+    <a href="health.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>SSL Checker</a>
+    <a href="health.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 8h16M8 4v16"/></svg>Email Security</a>
+  </aside>
+
+  <main class="content" id="main">
+    <div class="page-head">
+      <div>
+        <h1>Domain Health</h1>
+        <p>Live checks for <span id="pg-domain">example.com</span></p>
+      </div>
+    </div>
+
+    <form class="search-row" data-domain-form>
+      <input class="input" type="text" data-domain-input aria-label="Domain">
+      <button class="btn btn-primary" type="submit">Run Checks</button>
+    </form>
+
+    <div class="card health-hero" style="margin-bottom:20px;">
+      <div class="health-hero-icon" id="hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      </div>
+      <div>
+        <div style="font-size:12.5px; color:var(--text-muted); margin-bottom:2px;">Overall Health</div>
+        <h2 style="font-size:22px;" id="hero-label">Checking…</h2>
+      </div>
+    </div>
+
+    <div class="mini-check-grid" id="mini-check-grid"></div>
+
+    <div class="card">
+      <div style="padding: 18px 20px 0;"><h3 style="font-size:15px;">Detailed checks</h3></div>
+      <div style="padding: 8px 20px 8px;" id="check-list">
+        <div class="check-row"><span style="color:var(--text-muted); font-size:13.5px;">Running checks…</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const GOOD_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
+  const WARN_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.7 3.86a2 2 0 00-3.4 0z"/></svg>';
+  const BAD_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>';
+  const MANUAL_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+
+  function checkRow(name, detail, status) {
+    // status: 'good' | 'warn' | 'bad' | 'manual'
+    const icon = status === 'good' ? GOOD_ICON : status === 'warn' ? WARN_ICON : status === 'bad' ? BAD_ICON : MANUAL_ICON;
+    const dotClass = status === 'good' ? 'good' : status === 'bad' ? 'bad' : 'warn';
+    const badge =
+      status === 'good' ? '<span class="badge badge-good">Good</span>' :
+      status === 'bad' ? '<span class="badge badge-bad">Issue</span>' :
+      status === 'warn' ? '<span class="badge badge-warn">Warning</span>' :
+      '<span class="badge badge-neutral">Manual check</span>';
+    return `
+      <div class="check-row">
+        <div class="check-main">
+          <div class="check-dot ${dotClass}">${icon}</div>
+          <div><div class="check-name">${name}</div><div class="check-detail">${detail}</div></div>
+        </div>
+        ${badge}
+      </div>`;
+  }
+
+  function miniCheck(label, status) {
+    const text = status === 'good' ? 'Good' : status === 'bad' ? 'Issue' : status === 'warn' ? 'Warning' : 'Manual';
+    const color = status === 'good' ? 'var(--green)' : status === 'bad' ? 'var(--red)' : 'var(--amber)';
+    return `
+      <div class="card mini-check">
+        <div class="mini-check-icon" style="background:${color}22; color:${color};">${status === 'good' ? GOOD_ICON : status === 'bad' ? BAD_ICON : WARN_ICON}</div>
+        <div class="mini-check-label">${label}</div><div class="mini-check-value">${text}</div>
+      </div>`;
+  }
+
+  async function render(domain) {
+    document.getElementById('pg-domain').textContent = domain;
+    document.getElementById('hero-label').textContent = 'Checking…';
+    document.getElementById('mini-check-grid').innerHTML = '';
+    document.getElementById('check-list').innerHTML =
+      '<div class="check-row"><span style="color:var(--text-muted); font-size:13.5px;">Running checks…</span></div>';
+
+    let records = [];
+    try {
+      records = await DT.getAllRecords(domain);
+    } catch (e) {
+      document.getElementById('hero-label').textContent = 'Could not check';
+      document.getElementById('check-list').innerHTML =
+        `<div class="check-row"><span style="color:var(--red); font-size:13.5px;">DNS lookup failed: ${e.message}</span></div>`;
+      return;
+    }
+
+    const a = records.filter((r) => r.type === 'A' || r.type === 'AAAA');
+    const ns = records.filter((r) => r.type === 'NS');
+    const mx = records.filter((r) => r.type === 'MX');
+    const txt = records.filter((r) => r.type === 'TXT');
+    const hasSpf = txt.some((r) => r.data.toLowerCase().includes('v=spf1'));
+    const dnsGood = a.length > 0 && ns.length > 0;
+
+    const httpsOk = await DT.checkHttps(domain);
+
+    let dmarcFound = false;
+    try {
+      const dmarcRecords = await DT.queryRecord(`_dmarc.${domain}`, 'TXT');
+      dmarcFound = dmarcRecords.some((r) => r.data.toLowerCase().includes('v=dmarc1'));
+    } catch (e) { /* leave as not found */ }
+
+    const rows = [
+      checkRow('DNS Records', dnsGood ? 'A/AAAA and NS records are configured.' : 'Missing A/AAAA or NS records.', dnsGood ? 'good' : 'bad'),
+      checkRow('HTTPS', httpsOk ? 'Site responded to an HTTPS connection.' : 'Could not establish an HTTPS connection.', httpsOk ? 'good' : 'bad'),
+      checkRow('SSL Certificate', httpsOk ? 'TLS handshake succeeded — certificate is likely valid.' : 'TLS handshake failed or timed out.', httpsOk ? 'good' : 'bad'),
+      checkRow('MX Records', mx.length ? `${mx.length} MX record(s) found.` : 'No MX records — mail may not be configured.', mx.length ? 'good' : 'warn'),
+      checkRow('SPF Record', hasSpf ? 'SPF record found in TXT records.' : 'No SPF record found.', hasSpf ? 'good' : 'warn'),
+      checkRow('DMARC Record', dmarcFound ? 'DMARC record found at _dmarc subdomain.' : 'No DMARC record found at _dmarc subdomain.', dmarcFound ? 'good' : 'warn'),
+      checkRow('DKIM Record', 'DKIM lives at a per-provider selector (e.g. selector1._domainkey) that can\'t be guessed automatically.', 'manual'),
+      checkRow('Blacklist Check', 'Requires a paid blacklist API — not available from a free static site.', 'manual')
+    ];
+    document.getElementById('check-list').innerHTML = rows.join('');
+
+    const emailStatus = mx.length && hasSpf ? 'good' : mx.length ? 'warn' : 'bad';
+    document.getElementById('mini-check-grid').innerHTML = [
+      miniCheck('DNS', dnsGood ? 'good' : 'bad'),
+      miniCheck('Website', httpsOk ? 'good' : 'bad'),
+      miniCheck('SSL', httpsOk ? 'good' : 'bad'),
+      miniCheck('Email', emailStatus)
+    ].join('');
+
+    const issues = [dnsGood, httpsOk, mx.length > 0].filter((x) => !x).length;
+    const label = issues === 0 ? 'Good' : issues === 1 ? 'Needs attention' : 'Poor';
+    document.getElementById('hero-label').textContent = label;
+    document.getElementById('hero-icon').style.background = issues === 0 ? 'var(--green-soft)' : issues === 1 ? '#f0b05422' : '#ef5a6f22';
+    document.getElementById('hero-icon').style.color = issues === 0 ? 'var(--green)' : issues === 1 ? 'var(--amber)' : 'var(--red)';
+  }
+
+  DT.initDomainForm(render);
+</script>
+</body>
+</html>
