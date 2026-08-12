@@ -36,8 +36,13 @@ const DT = (function () {
     return res.json();
   }
 
+  // IMPORTANT: only trust the Answer section. The Authority section on an
+  // NXDOMAIN or NODATA response contains the *parent* zone's SOA record
+  // (e.g. root/TLD servers) for negative-caching purposes — it does NOT
+  // belong to the domain being queried, and must never be shown as if
+  // it were one of the domain's own records.
   function parseAnswers(json) {
-    const rows = [...(json.Answer || []), ...(json.Authority || [])];
+    const rows = json.Answer || [];
     return rows.map((r) => ({
       name: r.name.replace(/\.$/, ''),
       type: TYPE_NAME[r.type] || String(r.type),
@@ -46,16 +51,39 @@ const DT = (function () {
     }));
   }
 
+  // DNS response codes (RFC 1035 / RFC 2136):
+  // 0 = NOERROR, 2 = SERVFAIL, 3 = NXDOMAIN, 5 = REFUSED
+  const RCODE = { NOERROR: 0, SERVFAIL: 2, NXDOMAIN: 3, REFUSED: 5 };
+
+  // A single DNS answer (even an empty one) does NOT prove a domain
+  // exists — only the response Status code does. NXDOMAIN on every
+  // query type means the name genuinely does not exist in DNS.
+  // Returns: 'exists' | 'not-found' | 'unknown' (resolver error/timeout).
+  async function checkDomainStatus(domain) {
+    try {
+      const json = await dohQuery(domain, 'NS', 'google');
+      if (json.Status === RCODE.NXDOMAIN) return 'not-found';
+      if (json.Status === RCODE.NOERROR) return 'exists';
+      return 'unknown'; // SERVFAIL, REFUSED, etc. — genuinely couldn't verify
+    } catch (e) {
+      return 'unknown';
+    }
+  }
+
   // Fetch every common record type for a domain from Google DoH.
+  // Only returns records that actually belong to the domain (see
+  // parseAnswers above) — never parent-zone/root-server metadata.
   async function getAllRecords(domain) {
     const types = ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SOA'];
     const results = await Promise.allSettled(
       types.map((t) => dohQuery(domain, t, 'google').then(parseAnswers))
     );
     const records = [];
-    results.forEach((r, i) => {
+    results.forEach((r) => {
       if (r.status === 'fulfilled') {
-        r.value.forEach((row) => records.push({ ...row, type: types[i] }));
+        // Keep each record's own real type (from the response), never
+        // the type we happened to query for.
+        r.value.forEach((row) => records.push(row));
       }
     });
     return records;
@@ -120,7 +148,16 @@ const DT = (function () {
       return m ? m[1].trim() : '';
     };
     const nameservers = [...raw.matchAll(/Name Server:\s*(\S+)/gi)].map((m) => m[1].toLowerCase());
+
+    // Registries signal "not registered" in very different ways —
+    // this covers the common phrasings rather than assuming any
+    // WHOIS response means the domain exists.
+    const notFoundPattern = /No match for|NOT FOUND|No Data Found|Domain not found|No entries found|Status:\s*(free|available)|No whois server is known/i;
+    const hasCoreFields = /(Domain Name:|Creation Date:|Registrar:)/i.test(raw);
+    const registered = hasCoreFields && !notFoundPattern.test(raw);
+
     return {
+      registered,
       registrar: grab(/Registrar:\s*(.+)/i),
       status: grab(/Domain Status:\s*(\S+)/i),
       created: grab(/Creation Date:\s*(.+)/i),
@@ -176,6 +213,6 @@ const DT = (function () {
 
   return {
     normalizeDomain, getAllRecords, checkPropagation, checkHttps, queryRecord,
-    fetchWhois, parseWhoisFields, getCurrentDomain, setCurrentDomain, initDomainForm
+    checkDomainStatus, fetchWhois, parseWhoisFields, getCurrentDomain, setCurrentDomain, initDomainForm
   };
 })();
