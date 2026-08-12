@@ -150,11 +150,18 @@ const DT = (function () {
     const nameservers = [...raw.matchAll(/Name Server:\s*(\S+)/gi)].map((m) => m[1].toLowerCase());
 
     // Registries signal "not registered" in very different ways —
-    // this covers the common phrasings rather than assuming any
-    // WHOIS response means the domain exists.
-    const notFoundPattern = /No match for|NOT FOUND|No Data Found|Domain not found|No entries found|Status:\s*(free|available)|No whois server is known/i;
-    const hasCoreFields = /(Domain Name:|Creation Date:|Registrar:)/i.test(raw);
-    const registered = hasCoreFields && !notFoundPattern.test(raw);
+    // this covers common phrasings across many TLDs rather than
+    // assuming any WHOIS response means the domain exists.
+    const notFoundPattern = /No match for|NOT FOUND|No Data Found|Domain not found|No entries found|Status:\s*(free|available)|No whois server is known|No matching record|has not been registered|is available for registration|No object found|No information available|not found in (the )?database|No such domain/i;
+
+    // IMPORTANT: don't require specific English field labels like
+    // "Creation Date:" or "Registrar:" to prove a domain is registered —
+    // WHOIS formats vary enormously between registries (especially
+    // outside .com/.net), so that strict check caused real, registered
+    // domains to be wrongly reported as "Not registered" whenever their
+    // registry used different field names. A substantive response that
+    // doesn't match a "not found" pattern is treated as registered.
+    const registered = raw.trim().length > 60 && !notFoundPattern.test(raw);
 
     return {
       registered,
