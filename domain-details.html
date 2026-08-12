@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238b6bff'/%3E%3Ctext x='50' y='70' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <meta name="author" content="Okoh Onyedikachi David">
 <title>Domain Details — Domain Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,9 +19,9 @@
   <nav class="topnav">
     <a href="index.html">Home</a>
     <a href="analysis.html">Features</a>
-    <a href="docs.html">Pricing</a>
+    <a href="pricing.html">Pricing</a>
     <a href="docs.html">Docs</a>
-    <a href="docs.html">About</a>
+    <a href="about.html">About</a>
   </nav>
   <div class="topbar-actions">
     <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">
@@ -107,12 +108,24 @@
       const { raw } = await DT.fetchWhois(domain);
       const f = DT.parseWhoisFields(raw);
 
-      document.getElementById('info-registrar').textContent = f.registrar || '—';
-      document.getElementById('info-whois-server').textContent = f.whoisServer || '—';
-      document.getElementById('info-status').textContent = f.status || '—';
-      document.getElementById('info-created').textContent = f.created || '—';
-      document.getElementById('info-expires').textContent = f.expires || '—';
-      document.getElementById('info-updated').textContent = f.updated || '—';
+      if (!f.registered) {
+        document.getElementById('info-registrar').textContent = 'Not registered';
+        document.getElementById('info-whois-server').textContent = '—';
+        document.getElementById('info-status').textContent = 'Not registered';
+        document.getElementById('info-created').textContent = '—';
+        document.getElementById('info-expires').textContent = '—';
+        document.getElementById('info-updated').textContent = '—';
+        document.getElementById('ns-list').innerHTML = '<div class="kv-row"><span class="k mono">No nameservers — not registered</span></div>';
+        document.getElementById('raw-whois').textContent = raw.trim();
+        return;
+      }
+
+      document.getElementById('info-registrar').textContent = f.registrar || 'Not disclosed';
+      document.getElementById('info-whois-server').textContent = f.whoisServer || 'Not disclosed';
+      document.getElementById('info-status').textContent = f.status || 'Not disclosed';
+      document.getElementById('info-created').textContent = f.created || 'Not disclosed';
+      document.getElementById('info-expires').textContent = f.expires || 'Not disclosed';
+      document.getElementById('info-updated').textContent = f.updated || 'Not disclosed';
 
       document.getElementById('ns-list').innerHTML = f.nameservers.length
         ? f.nameservers.map((ns) => `<div class="kv-row"><span class="k mono">${ns}</span></div>`).join('')

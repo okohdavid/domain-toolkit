@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238b6bff'/%3E%3Ctext x='50' y='70' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <meta name="author" content="Okoh Onyedikachi David">
 <title>Domain Health — Domain Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,9 +19,9 @@
   <nav class="topnav">
     <a href="index.html">Home</a>
     <a href="analysis.html">Features</a>
-    <a href="docs.html">Pricing</a>
+    <a href="pricing.html">Pricing</a>
     <a href="docs.html">Docs</a>
-    <a href="docs.html">About</a>
+    <a href="about.html">About</a>
   </nav>
   <div class="topbar-actions">
     <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">
@@ -120,7 +121,30 @@
     document.getElementById('hero-label').textContent = 'Checking…';
     document.getElementById('mini-check-grid').innerHTML = '';
     document.getElementById('check-list').innerHTML =
-      '<div class="check-row"><span style="color:var(--text-muted); font-size:13.5px;">Running checks…</span></div>';
+      '<div class="check-row"><span style="color:var(--text-muted); font-size:13.5px;">Checking if this domain exists…</span></div>';
+
+    const domainStatus = await DT.checkDomainStatus(domain);
+
+    if (domainStatus === 'not-found') {
+      document.getElementById('hero-label').textContent = 'Not Found';
+      document.getElementById('hero-icon').style.background = '#ef5a6f22';
+      document.getElementById('hero-icon').style.color = 'var(--red)';
+      document.getElementById('mini-check-grid').innerHTML = [
+        miniCheck('DNS', 'bad'), miniCheck('Website', 'bad'), miniCheck('SSL', 'bad'), miniCheck('Email', 'bad')
+      ].join('');
+      document.getElementById('check-list').innerHTML = checkRow(
+        'Domain Status', `${domain} does not resolve in DNS (NXDOMAIN) — it does not appear to exist or be registered.`, 'bad'
+      );
+      return;
+    }
+
+    if (domainStatus === 'unknown') {
+      document.getElementById('hero-label').textContent = 'Unable to verify';
+      document.getElementById('check-list').innerHTML = checkRow(
+        'Domain Status', 'The DNS resolver did not return a clear answer for this domain. Try again in a moment.', 'manual'
+      );
+      return;
+    }
 
     let records = [];
     try {

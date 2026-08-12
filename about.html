@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Okoh Onyedikachi David">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Domain Toolkit</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238b6bff'/%3E%3Ctext x='50' y='70' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="topbar">
+  <a href="index.html" class="brand"><span class="brand-mark">D</span> Domain Toolkit</a>
+  <nav class="topnav">
+    <a href="index.html">Home</a>
+    <a href="analysis.html">Features</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="docs.html">Docs</a>
+    <a href="about.html" class="active">About</a>
+  </nav>
+  <div class="topbar-actions">
+    <button class="icon-btn" data-theme-icon aria-label="Toggle theme"></button>
+    <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+    <a href="signup.html" class="btn btn-primary btn-sm">Sign up</a>
+  </div>
+</header>
+
+<main id="main" class="section" style="padding-top:56px;">
+  <div class="section-head">
+    <div class="pill">About this project</div>
+    <h2>Built while learning DNS, Linux, and agentic engineering</h2>
+    <p>Domain Toolkit is a personal project — a place to practice DNS, networking, and full-stack development end to end.</p>
+  </div>
+
+  <div class="card pad-lg" style="max-width:640px; margin:0 auto;">
+    <p style="font-size:14.5px; margin-bottom:14px;">Domain Toolkit was built by <strong style="color:var(--text-primary);">Okoh Onyedikachi David</strong> as a hands-on way to learn how DNS actually works — records, propagation, WHOIS, and domain health — rather than just reading about it.</p>
+    <p style="font-size:14.5px; margin-bottom:20px;">Every lookup on this site runs against real public DNS-over-HTTPS APIs and a small serverless WHOIS function — nothing here is faked or hardcoded sample data.</p>
+    <a href="https://github.com/okohdavid" target="_blank" rel="noopener" class="btn btn-primary btn-sm">View on GitHub</a>
+  </div>
+</main>
+
+<script src="js/app.js"></script>
+</body>
+</html>

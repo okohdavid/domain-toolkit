@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238b6bff'/%3E%3Ctext x='50' y='70' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <meta name="author" content="Okoh Onyedikachi David">
 <title>Domain Analysis — Domain Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,9 +19,9 @@
   <nav class="topnav">
     <a href="index.html">Home</a>
     <a href="analysis.html" class="active">Features</a>
-    <a href="docs.html">Pricing</a>
+    <a href="pricing.html">Pricing</a>
     <a href="docs.html">Docs</a>
-    <a href="docs.html">About</a>
+    <a href="about.html">About</a>
   </nav>
   <div class="topbar-actions">
     <button class="hamburger" data-sidebar-toggle aria-label="Toggle menu">
@@ -167,10 +168,37 @@
   async function render(domain) {
     document.getElementById('pg-domain').textContent = domain;
     document.getElementById('stat-domain').textContent = domain;
-    document.getElementById('summary-text').textContent = 'Looking up records…';
+    document.getElementById('summary-text').textContent = 'Checking if this domain exists…';
     ['stat-status', 'stat-ip', 'stat-server', 'metric-dns', 'metric-web', 'metric-email', 'metric-ssl',
      'fact-created', 'fact-expires', 'fact-updated', 'fact-registrar'].forEach(id => document.getElementById(id).textContent = '—');
     document.getElementById('score-num').textContent = '—';
+
+    // Check domain existence FIRST. A DNS response (even an empty one)
+    // is not proof a domain exists — only checking the actual Status
+    // code (NXDOMAIN vs NOERROR) tells us that. This prevents ever
+    // showing a fabricated score for a domain that doesn't exist.
+    const domainStatus = await DT.checkDomainStatus(domain);
+
+    if (domainStatus === 'not-found') {
+      document.getElementById('stat-status').textContent = 'Not Found';
+      document.getElementById('stat-ip').textContent = 'N/A';
+      document.getElementById('stat-server').textContent = 'N/A';
+      document.getElementById('score-num').textContent = 'N/A';
+      document.getElementById('score-tag').textContent = 'Domain not found';
+      document.getElementById('score-arc').setAttribute('stroke-dashoffset', CIRC);
+      ['metric-dns', 'metric-web', 'metric-email', 'metric-ssl'].forEach(id => document.getElementById(id).textContent = 'N/A');
+      ['fact-created', 'fact-expires', 'fact-updated', 'fact-registrar'].forEach(id => document.getElementById(id).textContent = 'N/A');
+      document.getElementById('summary-text').textContent =
+        `${domain} does not resolve in DNS (NXDOMAIN) — this domain does not appear to exist or is not registered.`;
+      return;
+    }
+
+    if (domainStatus === 'unknown') {
+      document.getElementById('summary-text').textContent =
+        'Could not verify this domain — the DNS resolver did not return a clear answer. Try again in a moment.';
+      document.getElementById('score-tag').textContent = 'Unable to verify';
+      return;
+    }
 
     let records = [];
     try {
@@ -216,10 +244,14 @@
     try {
       const { raw } = await DT.fetchWhois(domain);
       const f = DT.parseWhoisFields(raw);
-      document.getElementById('fact-created').textContent = f.created || '—';
-      document.getElementById('fact-expires').textContent = f.expires || '—';
-      document.getElementById('fact-updated').textContent = f.updated || '—';
-      document.getElementById('fact-registrar').textContent = f.registrar || '—';
+      if (!f.registered) {
+        ['fact-created', 'fact-expires', 'fact-updated', 'fact-registrar'].forEach(id => document.getElementById(id).textContent = 'Not registered');
+      } else {
+        document.getElementById('fact-created').textContent = f.created || 'Not disclosed';
+        document.getElementById('fact-expires').textContent = f.expires || 'Not disclosed';
+        document.getElementById('fact-updated').textContent = f.updated || 'Not disclosed';
+        document.getElementById('fact-registrar').textContent = f.registrar || 'Not disclosed';
+      }
     } catch (e) {
       document.getElementById('fact-created').textContent = 'WHOIS unavailable';
       document.getElementById('fact-expires').textContent = 'WHOIS unavailable';
