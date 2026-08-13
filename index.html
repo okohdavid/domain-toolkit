@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238b6bff'/%3E%3Ctext x='50' y='70' font-size='58' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
+<meta name="author" content="Okoh Onyedikachi David">
+<title>Domain Toolkit — Analyze any domain, all in one place</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="topbar">
+  <a href="index.html" class="brand">
+    <span class="brand-mark">D</span> Domain Toolkit
+  </a>
+  <nav class="topnav">
+    <a href="index.html" class="active">Home</a>
+    <a href="analysis.html">Features</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="docs.html">Docs</a>
+    <a href="about.html">About</a>
+  </nav>
+  <div class="topbar-actions">
+    <button class="icon-btn" data-theme-icon aria-label="Toggle theme"></button>
+    <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
+    <a href="signup.html" class="btn btn-primary btn-sm">Sign up</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div>
+      <div class="pill hero-eyebrow"><span class="dot"></span> Powerful · Fast · Accurate</div>
+      <h1>Analyze any domain.<br><span class="accent">All in one place.</span></h1>
+      <p>Lookup DNS records, check domain health, monitor propagation, and get important domain information instantly.</p>
+      <form class="hero-search" id="hero-search">
+        <input class="input" type="text" id="hero-domain-input" placeholder="Enter domain name (e.g. example.com)" aria-label="Domain name">
+        <button class="btn btn-primary" type="submit">Analyze Domain</button>
+      </form>
+      <div class="hero-examples">
+        Try examples:
+        <a class="example-chip" href="analysis.html?domain=example.com">example.com</a>
+        <a class="example-chip" href="analysis.html?domain=google.com">google.com</a>
+        <a class="example-chip" href="analysis.html?domain=cloudflare.com">cloudflare.com</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <svg class="orbit-svg" viewBox="0 0 420 380">
+        <defs>
+          <linearGradient id="globeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#4cd8ea" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#8b6bff" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+        <circle cx="210" cy="185" r="105" fill="url(#globeGrad)" stroke="#4cd8ea" stroke-opacity="0.4"/>
+        <ellipse cx="210" cy="185" rx="105" ry="40" fill="none" stroke="#4cd8ea" stroke-opacity="0.35"/>
+        <ellipse cx="210" cy="185" rx="105" ry="75" fill="none" stroke="#4cd8ea" stroke-opacity="0.25"/>
+        <ellipse cx="210" cy="185" rx="45" ry="105" fill="none" stroke="#4cd8ea" stroke-opacity="0.25"/>
+        <line x1="210" y1="80" x2="210" y2="290" stroke="#4cd8ea" stroke-opacity="0.25"/>
+        <line x1="105" y1="185" x2="315" y2="185" stroke="#4cd8ea" stroke-opacity="0.25"/>
+        <g stroke="#8b6bff" stroke-opacity="0.55" stroke-width="1.3">
+          <line x1="140" y1="120" x2="210" y2="185"/>
+          <line x1="280" y1="130" x2="210" y2="185"/>
+          <line x1="120" y1="230" x2="210" y2="185"/>
+          <line x1="300" y1="235" x2="210" y2="185"/>
+        </g>
+        <circle cx="210" cy="185" r="5" fill="#eef1f8"/>
+      </svg>
+      <div class="node-label" style="top: 24%; left: 22%; background:#2fd97a;">TXT</div>
+      <div class="node-label" style="top: 30%; right: 12%; background:#8b6bff;">MX</div>
+      <div class="node-label" style="top: 8%; right: 22%; background:#4cd8ea; color:#0b0f1a;">NS</div>
+      <div class="node-label" style="bottom: 12%; left: 30%; background:#4cd8ea; color:#0b0f1a;">NS</div>
+      <div class="node-label" style="bottom: 18%; right: 8%; background:#ef5a6f;">CNAME</div>
+    </div>
+  </section>
+
+  <div class="stats-strip">
+    <div class="stat card pad">
+      <div class="stat-icon violet" style="border-radius:10px; display:flex; align-items:center; justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 4"/></svg>
+      </div>
+      <div><b>50K+</b><span>Domains Analyzed</span></div>
+    </div>
+    <div class="stat card pad">
+      <div class="stat-icon green" style="border-radius:10px; display:flex; align-items:center; justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+      </div>
+      <div><b>20+</b><span>DNS Record Types</span></div>
+    </div>
+    <div class="stat card pad">
+      <div class="stat-icon cyan" style="border-radius:10px; display:flex; align-items:center; justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div><b>99.9%</b><span>Uptime</span></div>
+    </div>
+    <div class="stat card pad">
+      <div class="stat-icon amber" style="border-radius:10px; display:flex; align-items:center; justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20"/></svg>
+      </div>
+      <div><b>Global</b><span>DNS Servers</span></div>
+    </div>
+  </div>
+
+  <section class="section" id="features">
+    <div class="section-head">
+      <div class="pill">Everything in one workspace</div>
+      <h2>Built for people who live in DNS</h2>
+      <p>From a quick lookup to a full domain audit — one toolkit covers the whole workflow.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="card feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v16"/></svg></div>
+        <h3>Full DNS records</h3>
+        <p>A, AAAA, CNAME, MX, TXT, NS and SOA records pulled and organized in one readable table.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg></div>
+        <h3>Domain health checks</h3>
+        <p>SPF, DKIM, DMARC, SSL and blacklist status checked automatically with plain-language fixes.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20"/></svg></div>
+        <h3>Global propagation</h3>
+        <p>See how a domain resolves across major public DNS resolvers like Google and Cloudflare, live.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div>
+      <h2>Start analyzing your first domain</h2>
+      <p>No credit card required — run your first report in under a minute.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="analysis.html" class="btn btn-primary">Analyze a domain</a>
+      <a href="docs.html" class="btn btn-ghost">Read the docs</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="brand" style="margin-bottom:12px;"><span class="brand-mark">D</span> Domain Toolkit</div>
+      <p style="max-width:260px; font-size:13.5px;">A single workspace for DNS records, domain health, and propagation monitoring.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="analysis.html">Domain Analysis</a></li>
+        <li><a href="dns-records.html">DNS Records</a></li>
+        <li><a href="health.html">Domain Health</a></li>
+        <li><a href="propagation.html">Propagation</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="docs.html">Documentation</a></li>
+        <li><a href="docs.html">What is DNS?</a></li>
+        <li><a href="domain-details.html">WHOIS lookup</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="support.html">Contact support</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Domain Toolkit. All rights reserved.</span>
+    <span>Built by <a href="https://github.com/okohdavid" target="_blank" rel="noopener" style="color:var(--violet); font-weight:600;">Okoh Onyedikachi David</a></span>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  document.getElementById('hero-search').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const val = document.getElementById('hero-domain-input').value.trim();
+    window.location.href = 'analysis.html' + (val ? '?domain=' + encodeURIComponent(val) : '');
+  });
+</script>
+</body>
+</html>
