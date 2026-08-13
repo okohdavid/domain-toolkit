@@ -47,7 +47,6 @@
       backdrop && backdrop.classList.toggle('open');
     });
     backdrop && backdrop.addEventListener('click', close);
-    sidebar.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
   }
 
   document.addEventListener('DOMContentLoaded', () => {
